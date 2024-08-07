@@ -18,7 +18,7 @@ public class CRC {
             if (divid.charAt(0) == '1') {
                 temp = xor(div, divid.substring(0, dlen));
             } else {
-                temp = xor("0", divid.substring(0, dlen));
+                temp = xor(repeatString("0", dlen), divid.substring(0, dlen));
             }
             divid = temp.substring(1) + divid.substring(dlen);
             dndlen -= 1;
@@ -27,22 +27,29 @@ public class CRC {
     }
 
     public static String generator(String msg, String gen) {
-        int msglen = msg.length();
         int genlen = gen.length();
-        String divid = msg + "0".repeat(genlen - 1);
+        String divid = msg + repeatString("0", genlen - 1);
         String rem = divide(gen, divid);
         return msg + rem;
     }
 
     public static boolean checkcode(String cw, String gw) {
         String temp = divide(gw, cw);
-        return (Integer.parseInt(temp) == 0);
+        return temp.equals(repeatString("0", gw.length() - 1));
+    }
+
+    private static String repeatString(String str, int times) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < times; i++) {
+            sb.append(str);
+        }
+        return sb.toString();
     }
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.println("CRC Program");
-        String gen = "10001000000100001";
+        String gen = "10001000000100001"; // Generator polynomial
 
         while (true) {
             System.out.println("Choose an option:");
